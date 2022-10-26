@@ -10,9 +10,9 @@ class CoursesResource:
     def _get_connection():
         conn = pymysql.connect(
             user="root",
-            password="YLXBwst19981106",
-            # host="e6156-sw3532.ctpmijmek5ds.us-east-1.rds.amazonaws.com",
-            host="localhost",
+            password="dbuserdbuser",
+            host="database-course.ctpmijmek5ds.us-east-1.rds.amazonaws.com",
+            # host="localhost",
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=True
         )
