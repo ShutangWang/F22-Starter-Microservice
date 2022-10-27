@@ -41,9 +41,18 @@ class CoursesResource:
     @staticmethod
     def create_course_by_field(fields):
         insert_sql = """
-            insert into cc_courses.cc_courses(id,user_id,teacher_id,create_time,appointment_time,price)
-            values(%s,%s,%s,%date,%date,%f)
+            insert into cc_courses.cc_courses(user_id,teacher_id,create_time,appointment_time,price)
+            values("%s","%s","%s","%s",%f);
         """
+        last_id_sql = "select last_insert_id() from cc_courses.cc_courses limit 1;"
+
+        sql = insert_sql % fields
+        print(sql)
         conn = CoursesResource._get_connection()
         cur = conn.cursor()
-        cur.execute(insert_sql, list(fields.values()))
+
+        res = cur.execute(sql)
+        cur.execute(last_id_sql)
+        for row in cur:
+            return row['last_insert_id()']
+
