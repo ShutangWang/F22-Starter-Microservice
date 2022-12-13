@@ -4,6 +4,10 @@ import json
 from columbia_student_resource import ColumbiaStudentResource
 from courses_resource import CoursesResource
 from flask_cors import CORS
+from sns_notification import Notifications
+
+sns_middleware = Notifications()
+print(sns_middleware)
 
 # Create the Flask application object.
 app = Flask(__name__,
@@ -13,22 +17,25 @@ app = Flask(__name__,
 
 CORS(app)
 
+
+@app.before_request
+def before_request_func():
+    print("before_request executing!")
+    print("request = ", json.dumps(request, indent=2, default=str))
+
+
+@app.after_request
+def after_request_func(response):
+    print("after_request executing! Response = \n", json.dumps(response, indent=2, default=str))
+
+    sns_middleware.check_publish(request, response)
+
+    return response
+
+
 @app.route('/', methods=["GET"])
 def index():
     return 'You have reached the index page!'
-@app.get("/api/health")
-def get_health():
-    t = str(datetime.now())
-    msg = {
-        "name": "Course Service",
-        "health": "Good",
-        "at time": t
-    }
-
-    # DFF TODO Explain status codes, content type, ... ...
-    result = Response(json.dumps(msg), status=200, content_type="application/json")
-
-    return result
 
 
 @app.route("/api/students/<uni>", methods=["GET"])
