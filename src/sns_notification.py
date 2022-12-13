@@ -1,5 +1,6 @@
 import boto3
 import json
+import os
 
 
 class Notifications:
@@ -7,12 +8,12 @@ class Notifications:
     def publish_notification(self, sns_topic, json_message):
         sns_client = boto3.client("sns",
                                   region_name="us-east-1",
-                                  aws_access_key_id='AKIA5RBIT6FSU6YXRCFH',
-                                  aws_secret_access_key='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')
+                                  aws_access_key_id=os.environ.get("KEYID"),
+                                  aws_secret_access_key=os.environ.get("SECRETKEY"))
         res = sns_client.publish(
-            TopicArn= sns_topic,
-            Message = json.dumps(json_message, indent=2, default=str),
-            Subject = 'Something Happened'
+            TopicArn=sns_topic,
+            Message=json.dumps(json_message, indent=2, default=str),
+            Subject='Something Happened'
         )
         print("publish_notification response = ",
               json.dumps(res, indent=2, default=str))
