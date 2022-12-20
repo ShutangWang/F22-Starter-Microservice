@@ -61,25 +61,37 @@ def get_courses_by_userid(user_id):
 
     return rsp
 
+@app.route("/course/teacher/<teacher_id>", methods=["GET"])
+def get_courses_by_teacherid(teacher_id):
+    result = CoursesResource.get_by_teacherid(teacher_id)
 
-# @app.route("/courses?teacher=<teacher_id>", methods=["GET"])
-# def get_courses_by_teacherid(teacher_id):
-#     result = CoursesResource.get_by_teacherid(teacher_id)
-#
-#     if result:
-#         rsp = Response(json.dumps(result), status=200, content_type="application.json")
-#     else:
-#         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
-#
-#     return rsp
+    if result:
+        rsp = Response(json.dumps(result, default=str), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+
+    return rsp
+
+
+@app.route("/course", methods=["GET"])
+def get_all_courses():
+    result = CoursesResource.get_courses()
+
+    if result:
+        rsp = Response(json.dumps(result, default=str), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+
+    return rsp
+
 
 @app.route("/course/create", methods=["POST"])
 def create_course():
     json_dict = request.get_json()
     user_id = str(json_dict["user_id"])
     teacher_id = str(json_dict["teacher_id"])
-    create_time = json_dict["create_time"] #yyyy-mm-dd HH:mm:ss
-    appointment_time = json_dict["appointment_time"] #yyyy-mm-dd HH:mm:ss
+    create_time = json_dict["create_time"]  # yyyy-mm-dd HH:mm:ss
+    appointment_time = json_dict["appointment_time"]  # yyyy-mm-dd HH:mm:ss
     price = float(json_dict["price"])
 
     # fields = (user_id, teacher_id, create_time, appointment_time, price)
@@ -95,6 +107,7 @@ def create_course():
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
 
     return rsp
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5011)

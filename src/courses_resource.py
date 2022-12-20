@@ -28,15 +28,25 @@ class CoursesResource:
 
         return result
 
-    # @staticmethod
-    # def get_by_teacherid(teacher_id):
-    #     sql = "SELECT * FROM cc_courses.cc_courses where teacher_id=%s";
-    #     conn = CoursesResource._get_connection()
-    #     cur = conn.cursor()
-    #     res = cur.execute(sql, args=teacher_id)
-    #     result = cur.fetchone()
-    #
-    #     return result
+    @staticmethod
+    def get_by_teacherid(teacher_id):
+        sql = "SELECT * FROM cc_courses.cc_courses where teacher_id=%s";
+        conn = CoursesResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql, args=teacher_id)
+        result = cur.fetchall()
+
+        return result
+
+    @staticmethod
+    def get_courses():
+        sql = "SELECT * FROM cc_courses.cc_courses";
+        conn = CoursesResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql)
+        result = cur.fetchall()
+
+        return result
 
     @staticmethod
     def create_course_by_field(fields):
